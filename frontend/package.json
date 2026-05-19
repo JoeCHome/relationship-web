@@ -1,0 +1,29 @@
+{
+  "name": "relationship-map",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "build:lib": "tsc --noEmit && vite build --mode lib",
+    "typecheck": "tsc --noEmit",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2",
+    "typescript": "~6.0.2",
+    "vite": "^8.0.12"
+  },
+  "dependencies": {
+    "@types/d3-force": "^3.0.10",
+    "@xyflow/react": "^12.10.2",
+    "d3-force": "^3.0.0"
+  }
+}

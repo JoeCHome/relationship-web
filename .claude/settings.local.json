@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\jcare\\\\claudeCodeProjects\\\\relationshipWeb\" -Force)",
+      "Bash(Select-Object Name, PSIsContainer)",
+      "Bash(Format-Table -AutoSize)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\jcare\\\\claudeCodeProjects\\\\relationshipWeb\" -Force -Recurse | Where-Object { -not $_.PSIsContainer } | Format-Table FullName)",
+      "Bash(pip install *)",
+      "Read(//mnt/c/Users/jcare/claudeCodeProjects/relationshipWeb/**)",
+      "Bash(python -c ' *)",
+      "PowerShell(New-Item *)"
+    ]
+  }
+}
