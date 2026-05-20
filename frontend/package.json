@@ -3,6 +3,15 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "main": "dist/relationship-map.umd.cjs",
+  "module": "dist/relationship-map.js",
+  "exports": {
+    ".": {
+      "import": "./dist/relationship-map.js",
+      "require": "./dist/relationship-map.umd.cjs"
+    },
+    "./dist/relationship-map.css": "./dist/relationship-map.css"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
@@ -10,9 +19,14 @@
     "typecheck": "tsc --noEmit",
     "preview": "vite preview"
   },
-  "dependencies": {
+  "peerDependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
+  },
+  "dependencies": {
+    "@types/d3-force": "^3.0.10",
+    "@xyflow/react": "^12.10.2",
+    "d3-force": "^3.0.0"
   },
   "devDependencies": {
     "@types/react": "^19.2.14",
@@ -20,10 +34,5 @@
     "@vitejs/plugin-react": "^6.0.2",
     "typescript": "~6.0.2",
     "vite": "^8.0.12"
-  },
-  "dependencies": {
-    "@types/d3-force": "^3.0.10",
-    "@xyflow/react": "^12.10.2",
-    "d3-force": "^3.0.0"
   }
 }

@@ -35,6 +35,7 @@ export interface GraphEdge {
   id: number
   owner_user_id: string
   target_user_id: string
+  primary_type: string
   types: GraphEdgeType[]
 }
 
@@ -82,13 +83,20 @@ export interface NodePositionItem {
   is_pinned: boolean
 }
 
+export interface UserSearchResult {
+  id: string
+  display_name: string
+  photo_url?: string | null
+}
+
 export interface RelationshipMapProps {
   currentUserId: string
   mode?: 'explorer' | 'picker'
   apiUrl?: string
+  searchUsers?: (query: string) => Promise<UserSearchResult[]>
   data?: {
     users: User[]
-    connections: Array<{ id: number; owner_user_id: string; target_user_id: string; types: string[] }>
+    connections: Array<{ id: number; owner_user_id: string; target_user_id: string; primary_type?: string; types: string[] }>
     ratings: Rating[]
   }
   ratingDimensions?: RatingDimension[]

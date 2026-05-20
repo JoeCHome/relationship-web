@@ -26,11 +26,11 @@ export const api = {
   createUser: (base: string, user: { id: string; display_name: string; host_user_id: string; photo_url?: string; notes?: string }): Promise<User> =>
     apiFetch(`${base}/users`, { method: 'POST', body: JSON.stringify(user) }),
 
-  createConnection: (base: string, conn: { owner_user_id: string; target_user_id: string; types: string[] }) =>
+  createConnection: (base: string, conn: { owner_user_id: string; target_user_id: string; primary_type: string; types: string[] }) =>
     apiFetch(`${base}/connections`, { method: 'POST', body: JSON.stringify(conn) }),
 
-  updateConnectionTypes: (base: string, connId: number, types: string[]) =>
-    apiFetch(`${base}/connections/${connId}/types`, { method: 'PUT', body: JSON.stringify({ types }) }),
+  updateConnectionTypes: (base: string, connId: number, primary_type: string, types: string[]) =>
+    apiFetch(`${base}/connections/${connId}/types`, { method: 'PUT', body: JSON.stringify({ primary_type, types }) }),
 
   deleteConnection: (base: string, connId: number): Promise<void> =>
     apiFetch(`${base}/connections/${connId}`, { method: 'DELETE' }),

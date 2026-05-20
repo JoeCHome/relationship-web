@@ -7,8 +7,10 @@ import { TopBar } from './components/TopBar'
 import { LeftSidebar } from './components/LeftSidebar'
 import { RightPanel } from './components/RightPanel'
 import { PickerOverlay } from './components/PickerOverlay'
+import { AddConnectionOverlay } from './components/AddConnectionOverlay'
 import type {
   RelationshipMapProps,
+  UserSearchResult,
   RelationshipType,
   GraphData,
   GraphUser,
@@ -77,6 +79,7 @@ function controlledDataToGraphData(
     id: c.id,
     owner_user_id: c.owner_user_id,
     target_user_id: c.target_user_id,
+    primary_type: c.primary_type ?? c.types[0] ?? '',
     types: resolveEdgeTypes(c.types),
   }))
 
@@ -139,6 +142,7 @@ export function RelationshipMap(props: RelationshipMapProps) {
     currentUserId,
     mode: modeProp = 'explorer',
     apiUrl,
+    searchUsers: searchUsersProp,
     data: controlledInput,
     ratingDimensions = [],
     pickerTitle = 'Select a person',
@@ -163,6 +167,7 @@ export function RelationshipMap(props: RelationshipMapProps) {
   const [pickerDepth, setPickerDepth] = useState(pickerMaxDepth)
   const [pickerTypes, setPickerTypes] = useState<string[]>(pickerAllowedTypes)
   const [pickerEligible, setPickerEligible] = useState<PickerUser[]>([])
+  const [addingConnection, setAddingConnection] = useState(false)
 
   // API-backed data path
   const { data: fetchedData, loading, error, refresh, setData: setFetchedData } = useGraphData(
@@ -289,6 +294,35 @@ export function RelationshipMap(props: RelationshipMapProps) {
     [apiUrl, selectedNodeId, currentUserId, onRatingSubmit, setData],
   )
 
+  const handleSearchUsers = useCallback(async (query: string): Promise<UserSearchResult[]> => {
+    if (searchUsersProp) return searchUsersProp(query)
+    if (apiUrl) return api.searchUsers(apiUrl, query, graphData?.users.map(u => u.id))
+    return []
+  }, [searchUsersProp, apiUrl, graphData])
+
+  const handleAddConnectionConfirm = useCallback(async (
+    targetUser: UserSearchResult,
+    primaryType: string,
+    secondaryTypes: string[],
+  ) => {
+    if (!apiUrl) return
+    await api.createUser(apiUrl, {
+      id: targetUser.id,
+      display_name: targetUser.display_name,
+      host_user_id: targetUser.id,
+      photo_url: targetUser.photo_url ?? undefined,
+    })
+    const allTypes = [primaryType, ...secondaryTypes]
+    await api.createConnection(apiUrl, {
+      owner_user_id: currentUserId,
+      target_user_id: targetUser.id,
+      primary_type: primaryType,
+      types: allTypes,
+    })
+    setAddingConnection(false)
+    refresh()
+  }, [apiUrl, currentUserId, refresh])
+
   const handlePickerConfirm = useCallback(
     (users: User[]) => {
       if (onSelect) onSelect(users)
@@ -340,7 +374,7 @@ export function RelationshipMap(props: RelationshipMapProps) {
           selectedNodeId={selectedNodeId}
           relationshipTypes={graphData.relationship_types}
           onSelectNode={handleNodeClick}
-          onAddPerson={() => {}}
+          onAddPerson={() => setAddingConnection(true)}
           showSearch={showSearch}
         />
 
@@ -368,6 +402,15 @@ export function RelationshipMap(props: RelationshipMapProps) {
           onRate={handleRate}
           onClose={() => setSelectedNodeId(null)}
         />
+
+        {addingConnection && graphData && (
+          <AddConnectionOverlay
+            relationshipTypes={graphData.relationship_types}
+            onSearch={handleSearchUsers}
+            onConfirm={handleAddConnectionConfirm}
+            onCancel={() => setAddingConnection(false)}
+          />
+        )}
 
         {mode === 'picker' && (
           <PickerOverlay

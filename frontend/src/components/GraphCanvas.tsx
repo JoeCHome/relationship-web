@@ -69,7 +69,7 @@ function toRFNodes(
 function toRFEdges(graphData: GraphData, pickerMode: boolean, pickerEligibleIds: Set<string>): Edge[] {
   return graphData.edges.map(edge => {
     const dimmed = pickerMode && !pickerEligibleIds.has(edge.target_user_id)
-    const data: RelationshipEdgeData = { types: edge.types, dimmed }
+    const data: RelationshipEdgeData = { primary_type: edge.primary_type, types: edge.types, dimmed }
     return {
       id: String(edge.id),
       source: edge.owner_user_id,
@@ -172,7 +172,7 @@ export function GraphCanvas({
         const graphEdge = graphData.edges.find(ge => String(ge.id) === e.id)
         if (!graphEdge) return e
         const dimmed = pickerMode && !pickerEligibleIds.has(graphEdge.target_user_id)
-        return { ...e, data: { types: graphEdge.types, dimmed } }
+        return { ...e, data: { primary_type: graphEdge.primary_type, types: graphEdge.types, dimmed } }
       }),
     )
   // eslint-disable-next-line react-hooks/exhaustive-deps

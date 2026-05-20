@@ -13,11 +13,13 @@ export default defineConfig(({ mode }) => ({
             fileName: 'relationship-map',
           },
           rollupOptions: {
-            external: ['react', 'react-dom', '@xyflow/react'],
+            external: ['react', 'react/jsx-runtime', 'react-dom', 'react-dom/client', '@xyflow/react'],
             output: {
               globals: {
                 react: 'React',
+                'react/jsx-runtime': 'ReactJSXRuntime',
                 'react-dom': 'ReactDOM',
+                'react-dom/client': 'ReactDOMClient',
                 '@xyflow/react': 'ReactFlow',
               },
             },
